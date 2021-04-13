@@ -17,8 +17,9 @@
     <RepositoryUrl>https://github.com/techyian/MMALSharp</RepositoryUrl>
 	<VersionPrefix>0.7.0</VersionPrefix>
 	<CodeAnalysisRuleSet>..\..\StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>	
-	<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+	<DocumentationFile></DocumentationFile>
 	<ProjectGuid>{dabc9991-56ad-4235-ba86-63def12c261a}</ProjectGuid>
+	<LangVersion>latest</LangVersion>
 	<!--Project guid for Sonar-->
   </PropertyGroup>
 
