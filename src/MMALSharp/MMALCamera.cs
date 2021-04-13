@@ -312,7 +312,7 @@ namespace MMALSharp
 
                     await Task.Delay(interval).ConfigureAwait(false);
 
-                    MMALLog.Logger.LogInformation($"Preparing to take picture. Resolution: {MMALCameraConfig.Resolution.Width} x {MMALCameraConfig.Resolution.Height}. " +
+                    MMALLog.Logger.LogInformation($"Preparing to take picture. Resolution: {MMALCameraConfig.StillResolution.Width} x {MMALCameraConfig.StillResolution.Height}. " +
                                         $"Encoder: {encodingType.EncodingName}. Pixel Format: {pixelFormat.EncodingName}.");
 
                     await this.ProcessAsync(this.Camera.StillPort).ConfigureAwait(false);

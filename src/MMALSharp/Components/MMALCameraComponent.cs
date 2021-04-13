@@ -183,8 +183,8 @@ namespace MMALSharp.Components
             
             var camConfig = new MMAL_PARAMETER_CAMERA_CONFIG_T(
                 new MMAL_PARAMETER_HEADER_T(MMALParametersCamera.MMAL_PARAMETER_CAMERA_CONFIG, Marshal.SizeOf<MMAL_PARAMETER_CAMERA_CONFIG_T>()),
-                                                                MMALCameraConfig.Resolution.Width,
-                                                                MMALCameraConfig.Resolution.Height,
+                                                                this.CameraInfo.MaxWidth, // Max allowable still resolution is resolution
+                                                                this.CameraInfo.MaxHeight, // of sensor
                                                                 0,
                                                                 1,
                                                                 MMALCameraConfig.Resolution.Width,
@@ -295,8 +295,8 @@ namespace MMALSharp.Components
         /// <param name="handler">The capture handler to associate with the still port.</param>
         private void InitialiseStill(IOutputCaptureHandler handler)
         {
-            int currentWidth = MMALCameraConfig.Resolution.Width;
-            int currentHeight = MMALCameraConfig.Resolution.Height;
+            int currentWidth = MMALCameraConfig.StillResolution.Width;
+            int currentHeight = MMALCameraConfig.StillResolution.Height;
 
             if (currentWidth == 0 || currentWidth > this.CameraInfo.MaxWidth)
             {
@@ -308,7 +308,7 @@ namespace MMALSharp.Components
                 currentHeight = this.CameraInfo.MaxHeight;
             }
 
-            MMALCameraConfig.Resolution = new Resolution(currentWidth, currentHeight);
+            MMALCameraConfig.StillResolution = new Resolution(currentWidth, currentHeight);
 
             MMALPortConfig portConfig = null;
 
@@ -318,7 +318,7 @@ namespace MMALSharp.Components
             {
                 MMALLog.Logger.LogWarning("Encoding set to RGB. Setting width padding to multiple of 16.");
 
-                var resolution = MMALCameraConfig.Resolution.Pad(16, 16);
+                var resolution = MMALCameraConfig.StillResolution.Pad(16, 16);
                 var encoding = MMALCameraConfig.Encoding;
 
                 try
@@ -347,7 +347,7 @@ namespace MMALSharp.Components
             }
             else
             {
-                var resolution = MMALCameraConfig.Resolution.Pad();
+                var resolution = MMALCameraConfig.StillResolution.Pad();
 
                 portConfig = new MMALPortConfig(
                     MMALCameraConfig.Encoding, 

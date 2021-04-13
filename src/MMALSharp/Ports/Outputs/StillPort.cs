@@ -28,7 +28,7 @@ namespace MMALSharp.Ports.Outputs
             {
                 if (_resolution.Width == 0 || _resolution.Height == 0)
                 {
-                    _resolution = new Resolution(MMALCameraConfig.Resolution.Width, MMALCameraConfig.Resolution.Height);
+                    _resolution = new Resolution(MMALCameraConfig.StillResolution.Width, MMALCameraConfig.StillResolution.Height);
                 }
 
                 return _resolution;
@@ -38,9 +38,9 @@ namespace MMALSharp.Ports.Outputs
             {
                 if (value.Width == 0 || value.Height == 0)
                 {
-                    this.NativeWidth = MMALCameraConfig.Resolution.Pad().Width;
-                    this.NativeHeight = MMALCameraConfig.Resolution.Pad().Height;
-                    _resolution = new Resolution(MMALCameraConfig.Resolution.Width, MMALCameraConfig.Resolution.Height);
+                    this.NativeWidth = MMALCameraConfig.StillResolution.Pad().Width;
+                    this.NativeHeight = MMALCameraConfig.StillResolution.Pad().Height;
+                    _resolution = new Resolution(MMALCameraConfig.StillResolution.Width, MMALCameraConfig.StillResolution.Height);
                 }
                 else
                 {

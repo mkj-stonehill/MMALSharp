@@ -42,6 +42,10 @@ namespace MMALSharp.Components
             this.MaxWidth = 2592;
             this.MaxHeight = 1944;
 
+            /// @TODO: this struct contains the NumCameras element, which is how many cameras 
+            /// are attached to the system (and how many elements of the Cameras array are valid).
+            /// The following code always assumes only one camera is attached, and it only ever
+            /// uses the first one--Cameras[0]).
             IntPtr ptr1 = Marshal.AllocHGlobal(Marshal.SizeOf<MMAL_PARAMETER_CAMERA_INFO_T>());
             var str1 = (MMAL_PARAMETER_HEADER_T*)ptr1;
 

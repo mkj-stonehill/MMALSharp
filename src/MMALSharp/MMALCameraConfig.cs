@@ -262,6 +262,11 @@ namespace MMALSharp
         */
 
         /// <summary>
+        /// The Resolution to use for Still captures.
+        /// </summary>
+        public static Resolution StillResolution { get; set; } = Resolution.As5MPixel;
+
+        /// <summary>
         /// Indicates whether the camera's still port should feature Burst Mode, i.e. MMAL_PARAMETER_CAMERA_BURST_CAPTURE.
         /// When enabled, burst mode will increase the rate at which images are taken, at the expense of quality.
         /// </summary>
