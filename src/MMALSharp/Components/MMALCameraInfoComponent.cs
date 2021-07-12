@@ -33,19 +33,28 @@ namespace MMALSharp.Components
         public int MaxHeight { get; set; }
 
         /// <summary>
+        /// Camera number (in multi-camera systems)
+        /// </summary>
+        public int CameraNum { get; set; }
+
+        /// <summary>
+        /// Total number of cameras detected
+        /// </summary>
+        public int NumCameras { get; set; }
+
+        /// <summary>
         /// Creates a new instance of <see cref="MMALCameraInfoComponent"/>.
         /// </summary>
-        public MMALCameraInfoComponent()
+        /// <param name="camera_num">Camera number (0 or 1) for this camera</param>
+        public MMALCameraInfoComponent(int camera_num)
             : base(MMALParameters.MMAL_COMPONENT_DEFAULT_CAMERA_INFO)
         {
             this.SensorName = "OV5647";
             this.MaxWidth = 2592;
             this.MaxHeight = 1944;
+            this.CameraNum = 0;
+            this.NumCameras = 1;
 
-            /// @TODO: this struct contains the NumCameras element, which is how many cameras 
-            /// are attached to the system (and how many elements of the Cameras array are valid).
-            /// The following code always assumes only one camera is attached, and it only ever
-            /// uses the first one--Cameras[0]).
             IntPtr ptr1 = Marshal.AllocHGlobal(Marshal.SizeOf<MMAL_PARAMETER_CAMERA_INFO_T>());
             var str1 = (MMAL_PARAMETER_HEADER_T*)ptr1;
 
@@ -79,11 +88,14 @@ namespace MMALSharp.Components
 
                     var s = Marshal.PtrToStructure<MMAL_PARAMETER_CAMERA_INFO_V2_T>(p);
 
-                    if (s.Cameras != null && s.Cameras.Length > 0)
+                    this.NumCameras = s.NumCameras;
+
+                    if (s.Cameras != null && s.Cameras.Length > 0 && camera_num < s.NumCameras)
                     {
-                        this.SensorName = s.Cameras[0].CameraName;
-                        this.MaxHeight = s.Cameras[0].MaxHeight;
-                        this.MaxWidth = s.Cameras[0].MaxWidth;
+                        this.SensorName = s.Cameras[camera_num].CameraName;
+                        this.MaxHeight = s.Cameras[camera_num].MaxHeight;
+                        this.MaxWidth = s.Cameras[camera_num].MaxWidth;
+                        this.CameraNum = camera_num;
                     }
                 }
                 catch

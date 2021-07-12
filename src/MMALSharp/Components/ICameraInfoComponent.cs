@@ -24,5 +24,15 @@ namespace MMALSharp.Components
         /// The camera's max operating height.
         /// </summary>
         int MaxHeight { get; }
+
+        /// <summary>
+        /// Camera number (zero-based, in multi-camera systems)
+        /// </summary>
+        int CameraNum { get; }
+
+        /// <summary>
+        /// Total number of cameras detected
+        /// </summary>
+        int NumCameras { get; }
     }
 }

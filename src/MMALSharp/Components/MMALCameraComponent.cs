@@ -110,7 +110,7 @@ namespace MMALSharp.Components
         /// <summary>
         /// Initialises a new MMALCameraComponent.
         /// </summary>
-        public unsafe MMALCameraComponent()
+        public unsafe MMALCameraComponent(int camera_num)
             : base(MMALParameters.MMAL_COMPONENT_DEFAULT_CAMERA)
         {
             this.Outputs.Add(new OutputPort((IntPtr)(&(*this.Ptr->Output[0])), this, Guid.NewGuid()));
@@ -119,7 +119,7 @@ namespace MMALSharp.Components
             
             if (this.CameraInfo == null)
             {
-                this.SetSensorDefaults();
+                this.SetSensorDefaults(camera_num);
             }
             
             this.PreviewPort = this.Outputs[MMALCameraPreviewPort];
@@ -136,7 +136,7 @@ namespace MMALSharp.Components
             this.VideoPort.SetStereoMode(MMALCameraConfig.StereoMode);
             this.StillPort.SetStereoMode(MMALCameraConfig.StereoMode);
 
-            this.Control.SetParameter(MMALParametersCamera.MMAL_PARAMETER_CAMERA_NUM, 0);
+            this.Control.SetParameter(MMALParametersCamera.MMAL_PARAMETER_CAMERA_NUM, this.CameraInfo.CameraNum);
             
             var eventRequest = new MMAL_PARAMETER_CHANGE_EVENT_REQUEST_T(
                 new MMAL_PARAMETER_HEADER_T(MMALParametersCommon.MMAL_PARAMETER_CHANGE_EVENT_REQUEST, Marshal.SizeOf<MMAL_PARAMETER_CHANGE_EVENT_REQUEST_T>()),
@@ -213,9 +213,9 @@ namespace MMALSharp.Components
             MMALLog.Logger.LogDebug("Camera component configured.");
         }
 
-        private void SetSensorDefaults()
+        private void SetSensorDefaults(int camera_num)
         {
-            this.CameraInfo = new MMALCameraInfoComponent();
+            this.CameraInfo = new MMALCameraInfoComponent(camera_num);
         }
                 
         /// <summary>

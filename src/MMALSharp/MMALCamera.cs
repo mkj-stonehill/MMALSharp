@@ -33,15 +33,66 @@ namespace MMALSharp
         private static readonly Lazy<MMALCamera> Lazy = new Lazy<MMALCamera>(() => new MMALCamera());
 
         /// <summary>
-        /// Reference to the camera component.
+        /// Reference to the currently selected camera component.
         /// </summary>
-        public MMALCameraComponent Camera { get; }
+        public MMALCameraComponent Camera { get { return Cameras[SelectedCameraNum]; } }
         
+        /// <summary>
+        /// List of detected camera components.
+        /// </summary>
+        public IList<MMALCameraComponent> Cameras { get; }
+
+        /// <summary>
+        /// Currently selected camera (>=0 && < Cameras.Count)
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Camera number must be greater than 0 and less than Cameras.Count</exception>
+        private int selectedCameraNum = 0;
+        public int SelectedCameraNum
+        {
+            get
+            {
+                return selectedCameraNum;
+            }
+            set
+            {
+                if ((value >= 0) && (value < Cameras.Count))
+                {
+                    // If switching cameras, must disable current one first
+                    if (value != selectedCameraNum)
+                        DisableCamera();
+
+                    // Now switch cameras
+                    selectedCameraNum = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
         private MMALCamera()
         {
             BcmHost.bcm_host_init();
 
-            this.Camera = new MMALCameraComponent();
+            // TODO: This is a hack.  We *always* add one camera, when we really should
+            // query the actual number of cameras present.  For example, the command
+            // "vcgencmd get_camera" prints out the number of cameras supported (by the
+            // firmware in the video chip), and actually detected.  But it appears that,
+            // in order to support older firmware (in the video chip?) we might not be able to
+            // query the cameras present, in which case, one camera will always be returned
+            // (the OV5647 sensor).  The info for that first camera will then tell us
+            // how many the firmware reported (and then we can add the others).  Note that,
+            // at the moment, only the Pi Compute Module supports two cameras.
+            List<MMALCameraComponent> detectedCameras = new();
+            detectedCameras.Add(new MMALCameraComponent(0));
+            for (int camera_num = 1; camera_num < detectedCameras[0].CameraInfo.NumCameras; camera_num++)
+            {
+                detectedCameras.Add(new MMALCameraComponent(camera_num));
+            }
+
+            // Save the camera list in a read-only property (so nobody can add or remove cameras after the fact)
+            Cameras = detectedCameras.AsReadOnly();
         }
 
         /// <summary>
