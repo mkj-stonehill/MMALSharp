@@ -22,6 +22,7 @@
 	<OutputType>Library</OutputType>
 	<StartupObject />
 	<LangVersion>latest</LangVersion>
+	<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
 	<!--Project guid for Sonar-->
   </PropertyGroup>
   <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
@@ -34,9 +35,10 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
-      <PrivateAssets>All</PrivateAssets>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

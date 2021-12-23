@@ -4,8 +4,6 @@
 // </copyright>
 
 using MMALSharp.Common;
-using System;
-using System.Diagnostics;
 
 namespace MMALSharp.Processors.Effects
 {
