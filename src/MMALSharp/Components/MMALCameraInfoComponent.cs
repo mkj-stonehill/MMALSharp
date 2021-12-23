@@ -74,6 +74,12 @@ namespace MMALSharp.Components
 
                 // Running on newer firmware - default to first camera found.
                 IntPtr ptr2 = Marshal.AllocHGlobal(Marshal.SizeOf<MMAL_PARAMETER_CAMERA_INFO_V2_T>());
+
+                // Alloc does not zero-fill; do that here, to avoid "ArgumentException" later when
+                // marshalling the structure (maybe due to invalid characters in the string?)
+                for (int offset = 0; offset < Marshal.SizeOf<MMAL_PARAMETER_CAMERA_INFO_V2_T>(); offset++)
+                    Marshal.WriteByte(ptr2, offset, 0);
+
                 var str2 = (MMAL_PARAMETER_HEADER_T*)ptr2;
 
                 str2->Id = MMALParametersCamera.MMAL_PARAMETER_CAMERA_INFO;
@@ -98,10 +104,11 @@ namespace MMALSharp.Components
                         this.CameraNum = camera_num;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
                     // Something went wrong, continue with OV5647 defaults.
                     MMALLog.Logger.LogWarning("Could not determine firmware version. Continuing with OV5647 defaults");
+                    MMALLog.Logger.LogDebug($"{ex}");
                 }
                 finally
                 {
